@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BigComMate.Entity.Common.Request;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +9,25 @@ namespace BigComMate.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        // GET: api/<AuthController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("callback")]
+        public async Task<IActionResult> AuthCallback([FromQuery] string code, [FromQuery] string context)
         {
-            return new string[] { "value1", "value2" };
-        }
+            using var client = new HttpClient();
+            var requestData = new
+            {
+                client_id = "YOUR_CLIENT_ID",
+                client_secret = "YOUR_CLIENT_SECRET",
+                code,
+                grant_type = "authorization_code",
+                redirect_uri = "YOUR_REDIRECT_URI",
+                context
+            };
 
-        // GET api/<AuthController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+            var response = await client.PostAsJsonAsync("https://login.bigcommerce.com/oauth2/token", requestData);
+            var tokenData = await response.Content.ReadFromJsonAsync<OAuthResponse>();
 
-        // POST api/<AuthController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<AuthController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AuthController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            // Save the store hash and access token in the database
+            return Ok(new { message = "App Installed Successfully" });
         }
     }
 }
