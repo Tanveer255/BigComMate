@@ -13,7 +13,6 @@ builder.Services.Configure<BigCommerceSettings>(builder.Configuration.GetSection
 
 // Add HttpClient for API calls
 builder.Services.AddHttpClient();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,9 +23,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
-app.MapControllers();
+app.MapControllers(); // This is enough for API controllers
 
 app.Run();
