@@ -15,7 +15,7 @@ namespace BigComMate.Controllers
         ) : ControllerBase
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly BigCommerceSettings _bigCommerceOptions =bigCommerceOptions.Value;
+        private readonly BigCommerceSettings _bigCommerceOptions = bigCommerceOptions.Value;
         [HttpGet("authorize")]
         public IActionResult Authorize()
         {
