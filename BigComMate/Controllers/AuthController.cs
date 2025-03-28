@@ -16,6 +16,15 @@ namespace BigComMate.Controllers
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly BigCommerceSettings _bigCommerceOptions =bigCommerceOptions.Value;
+        [HttpGet("authorize")]
+        public IActionResult Authorize()
+        {
+            var clientId = _bigCommerceOptions.ClientId;
+            var redirectUri = _bigCommerceOptions.RedirectUri;
+            var authUrl = $"{_bigCommerceOptions.AuthUrl}?client_id={clientId}&response_type=code&scope=store_v2_orders&redirect_uri={redirectUri}";
+
+            return Redirect(authUrl);
+        }
         [HttpGet("callback")]
         public async Task<IActionResult> AuthCallback([FromQuery] string code, [FromQuery] string context)
         {
